@@ -71,22 +71,33 @@ class MainFrame(customtkinter.CTkFrame):
     super().__init__(master, **kwargs)
     self.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
     self.grid_rowconfigure((0,1,2,3,4), weight=1)
-    self.redraw_grid()
+    self.first_grid_draw()
     
   def redraw_grid(self):
     global current_month
-    for slave in self.grid_slaves():
-      slave.destroy()
+    month_length = list(months.months.items())[current_month][1]
+    if month_length < len(self.grid_slaves()):
+      for slave in self.grid_slaves():
+        if int(slave.cget("text")) > month_length:
+          slave.destroy()
+    elif month_length > len(self.grid_slaves()):
+      for day in range(int(self.grid_slaves()[0].cget("text"))+1, month_length+1):
+        column = (day-1) % 7
+        row = (day-1) // 7
+        customtkinter.CTkButton(self, text=day, anchor="se", corner_radius=0).grid(row = row, column = column, sticky="news", padx = 2, pady=2)
+        
+  def first_grid_draw(self):
+    global current_month
+    month_length = list(months.months.items())[current_month][1]
     day = 1
     for row in range(5):
-      for column in range(7):
-        month_length = list(months.months.items())[current_month][1]
+       for column in range(7):
         if day > month_length:
           break
-        customtkinter.CTkButton(self, text=day, anchor="se").grid(row = row, column = column, sticky="news", padx = 2, pady=2)
+        customtkinter.CTkButton(self, text=day, anchor="se", corner_radius=0).grid(row = row, column = column, sticky="news", padx = 2, pady=2)
         day += 1
-      if day > month_length:
-        break
+       if day > month_length:
+         break
 
     
 class UsersScrollableFrame(customtkinter.CTkScrollableFrame):
