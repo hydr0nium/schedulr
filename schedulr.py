@@ -6,9 +6,6 @@ from layout import MainFrame, UsersScrollableFrame, OptionsFrame, SolveButtonFra
 
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("green")
-menu_width = 0.25
-
-
 
 class App(customtkinter.CTk):
   def __init__(self):
